@@ -4,6 +4,9 @@ import os
 import sys
 
 ERROR_CODE = 1
+
+USE_DEFAULT = False
+
 # prompts the user for every file overwrite
 gdo_prompt = False
 # overwrites the source files, if False a new
@@ -139,8 +142,8 @@ def prefix_filename(prefix : str, file_path : str) -> str:
     return os.path.join(os.path.dirname(file_path), prefixed_name)
 
 def copy_file(src : str, dest : str) -> None:
-    src_file = open(src, 'r')
-    with open(dest, 'w') as dest_file:
+    src_file = open(src, 'rb')
+    with open(dest, 'wb') as dest_file:
         dest_file.write(src_file.read())
     src_file.close()
 
@@ -260,7 +263,7 @@ directory or file: {}\
     # if it's not a regular file path then create directory 
     if os.path.splitext(dest)[1] == '':
         mkdir_wrapper(dest)
-    if are_same_path(source, dest):
+    if are_same_path(source, dest) and USE_DEFAULT:
         prompt_directory_overwrite(source)
     if not is_astyle_installed():
         print(ASTYLE_NOT_INSTALLED, file=sys.stderr)
@@ -288,7 +291,9 @@ def recursive_styler(path: str = '.', styled_path : str = '.') -> None:
             return
         style_wrapper(src_path=path, styled_path=styled_path)
         return
-    # TODO: add a functionality for copying non styled files.
+    if os.path.isfile(path) and not are_same_path(path, styled_path):
+        copy_file(src=path, dest=styled_path)
+    
     if not os.path.isdir(path):
         return
     dir_path = path
