@@ -35,7 +35,7 @@
     in directories matching the source's structure.
 
   **TODO**
-  - [ ] Copy all files (that aren't formatted) from source directory to the destination directory.
-  - [ ] Create an option to use default `gdo_overwrite`, `gdo_prompt` without asking.
+  - [x] Copy all files (that aren't formatted) from source directory to the destination directory.
+  - [x] Create an option to use default `gdo_overwrite`, `gdo_prompt` without asking.
 
   
